@@ -1,25 +1,24 @@
-from socket import *
+import socket
 
-serverName = 'localhost'  
-serverPort = 12000        
+host = '127.0.0.1'  # A szerver IP címe
+port = 12345  # A szerver portja
 
+# Kliens létrehozása
+client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+client_socket.connect((host, port))
 
-clientSocket = socket(AF_INET, SOCK_STREAM)
-clientSocket.connect((serverName, serverPort))
-
+# Üzenet küldése a szervernek
 while True:
-    message = input('Enter message (or "exit" to quit): ')
-    
-  
-    clientSocket.send(message.encode())
-    
-    if message.lower() == 'exit':
-        print('Exiting...')
-        break
-    
- 
-    modifiedMessage = clientSocket.recv(1024).decode()
-    print('From server:', modifiedMessage)
+    command = input("Enter command: ")  # Parancs beírása
+    client_socket.sendall(command.encode())  # Parancs elküldése a szervernek
 
-# Kapcsolat lezárása
-clientSocket.close()
+    # Ha a parancs 'exit', akkor zárjuk be a kapcsolatot
+    if command.lower() == 'exit':
+        print("Closing connection...")
+        break
+
+    # Válasz fogadása a szervertől
+    response = client_socket.recv(1024)
+    print(f"Server response: {response.decode()}")
+
+client_socket.close()  # Kliens bezárása

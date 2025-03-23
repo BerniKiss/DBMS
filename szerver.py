@@ -1,7 +1,7 @@
 import socket
 import os
 import re
-from server_files.database_op import create_database  # Importáljuk a függvényt
+from server_files.database_op import create_database  # A 'create_database' függvény importálása
 
 # Szerver beállításai
 HOST = '127.0.0.1'
