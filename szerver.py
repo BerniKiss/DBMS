@@ -13,8 +13,6 @@ def parse_command(command):
 
     if match := re.match(r'create database (\w+)', command):
         return "create_database", match.group(1)
-    elif match := re.match(r'create table (\w+)', command):
-        return "create_table", match.group(1)
     else:
         return None, None
 
@@ -42,7 +40,6 @@ def handle_client(client_socket):
             client_socket.sendall(response.encode() + b"\n")
 
 def main():
-    """ Indítja a szervert """
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as server_socket:
         server_socket.bind((HOST, PORT))
         server_socket.listen(5)
