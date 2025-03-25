@@ -10,15 +10,22 @@ BASE_DIR = "databases"
 
 def use_database(db_name):
     """Beállítja az aktuális adatbázist és betölti az adatbázis JSON fájlját"""
-    global current_database, current_db_metadata
-    db_path = os.path.join(BASE_DIR, db_name)
-    db_meta_path = os.path.join(db_path, "database.json")  # Metaadatokat tároló JSON fájl
+    global current_database
 
-    if not os.path.exists(db_path) or not os.path.exists(db_meta_path):
+
+    db_path = os.path.join(BASE_DIR, db_name)
+    print(f" Dolgozo konyvtar{BASE_DIR}")
+
+
+    print(f"Checking if the database exists at: {db_path}")  # Debug log
+    if not os.path.exists(db_path):
+        print(f"Database '{db_name}' does not exist.")
         return 1  # Az adatbázis vagy annak metaadata nem létezik
 
     # Beállítjuk az aktuális adatbázist
     current_database = db_name
+    print(f"Using database: {current_database}")
+    return 0
 
 
 def load_databases():
