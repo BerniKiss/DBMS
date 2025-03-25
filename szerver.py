@@ -13,6 +13,8 @@ def parse_command(command):
 
     if match := re.match(r'create database (\w+)', command):
         return "create_database", match.group(1)
+    elif match := re.match(r'create table (\w+)', command):
+        return "create_table", match.group(1)
     else:
         return None, None
 
