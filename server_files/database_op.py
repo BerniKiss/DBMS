@@ -26,7 +26,7 @@ def get_database_names_from_file(filepath):
 
 def use_database(db_name):
     """Beállítja az aktuális adatbázist és betölti az adatbázis JSON fájlját"""
-    global current_database8
+    global current_database
 
 
     db_path = os.path.join(DB_FILE, db_name)
@@ -34,6 +34,11 @@ def use_database(db_name):
 
 
     print(f"Checking if the database exists at: {db_path}")  # Debug log
+    databases = load_databases()
+
+    if db_name not in databases:
+        return 1
+
     '''
     if not os.path.exists(db_path):
         print(f"Database '{db_name}' does not exist.")

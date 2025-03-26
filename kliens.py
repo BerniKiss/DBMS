@@ -9,7 +9,7 @@ client_socket.connect((host, port))
 
 #uzenet kuldese a szervernejk
 while True:
-    command = input("Enter command: ")  
+    command = input("Enter command: ")
     client_socket.sendall(command.encode())  #parancsot elkuldi a szervernek
 
     #ha exit akkor bezarpm
@@ -17,7 +17,7 @@ while True:
         print("Closing connection...")
         break
 
-    
+
     response = client_socket.recv(1024)
     print(f"Server response: {response.decode()}")
 

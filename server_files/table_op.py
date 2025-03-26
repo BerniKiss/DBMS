@@ -1,6 +1,8 @@
 import os
 import json
-from server_files.database_op import DB_FILE, current_database, current_db_metadata  # Az adatbázis modulból importáljuk
+from server_files.database_op import DB_FILE, current_db_metadata  # Az adatbázis modulból importáljuk
+#mindig a legfrisebb erteket kapjuk meg
+import server_files.database_op as db_op
 
 def create_table(table_name, columns):
     """
@@ -10,19 +12,20 @@ def create_table(table_name, columns):
     :param columns: Szótár formátumú oszlopdefiníció pl. {"id": "int", "name": "str"}.
     :return: 0 ha sikeres, 1 ha nincs kiválasztott adatbázis, 2 ha már létezik a tábla.
     """
-    global current_database, current_db_metadata
-
+    #global current_database
+    print(f"Current database: {db_op.current_database}")
     # Ellenőrizzük, hogy van-e aktív adatbázis
-    if current_database is None:
+    if db_op.current_database is None:
         return 1  # Nincs kiválasztott adatbázis
 
-    db_path = os.path.join(DB_FILE, current_database)
+    db_path = os.path.join(DB_FILE, db_op.current_database)
     table_path = os.path.join(db_path, f"{table_name}.json")
 
     # Ellenőrizzük, hogy a tábla már létezik-e
     if os.path.exists(table_path):
         return 2  # A tábla már létezik
 
+    os.makedirs(db_path, exist_ok=True)
     # Létrehozzuk a tábla JSON fájlt (üres adatokkal, csak a struktúrát tartalmazza)
     table_data = {
         "columns": columns,  # Oszlopok és adattípusok

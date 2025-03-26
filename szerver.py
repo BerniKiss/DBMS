@@ -13,15 +13,20 @@ PORT = 12345
 
 def parse_command(command):
     """ Felismeri az SQL parancsokat """
-    command = command.strip().lower()
+    command = command.strip()
 
     #visszakuldi az operator tipusat + a neve (pl tabla, database)
     if match := re.match(r'create database (\w+)', command):
         return "create_database", match.group(1)
     elif match := re.match(r'use database (\w+)', command):  # Új parancs: use database
         return "use_database", match.group(1)
-    elif match := re.match(r'create table (\w+)', command):
-        return "create_table", match.group(1)
+    elif match := re.match(r'create table (\w+)\s+(.*)', command):
+        table_name = match.group(1)
+        columns = match.group(2).split(",")  # Az oszlopokat vesszővel választjuk el
+        columns = [col.strip() for col in columns]  # Eltávolítjuk a fölösleges szóközöket
+        print(table_name)
+        print(columns)
+        return "create_table", (table_name,columns)
     elif match := re.match(r'list databases', command):
         return "list_databases", None
     else:
@@ -43,6 +48,7 @@ def handle_client(client_socket):
                 break
 
             command_type, argument = parse_command(data)
+            print(command_type)
             if command_type == "create_database":
                 status = create_database(argument)
                 response = f"Database '{argument}' created successfully!" if status == 0 else f"Database '{argument}' already exists."
@@ -57,7 +63,8 @@ def handle_client(client_socket):
                 else:
                     response = f"Database '{argument}' does not exist."
             elif command_type == "create_table":
-                status = create_table(argument)
+                status = create_table(argument[0],argument[1])
+                print(status)
                 response = f"Table '{argument}' created successfully!" if status == 0 else f"Table '{argument}' already exists."
             else:
                 response = "Invalid command."
