@@ -19,11 +19,13 @@ def create_table(table_name, columns):
         return 1  # Nincs kiválasztott adatbázis
 
     db_path = os.path.join(DB_FILE, db_op.current_database)
-    table_path = os.path.join(db_path, f"{table_name}.json")
 
+    #print(table_path)
+    tables=get_tables_from_database(db_op.current_database,db_path)
     # Ellenőrizzük, hogy a tábla már létezik-e
-    if os.path.exists(table_path):
+    if table_name in tables:
         return 2  # A tábla már létezik
+    table_path = os.path.join(db_path, f"{table_name}")
 
     os.makedirs(db_path, exist_ok=True)
     # Létrehozzuk a tábla JSON fájlt (üres adatokkal, csak a struktúrát tartalmazza)
@@ -43,3 +45,22 @@ def create_table(table_name, columns):
         json.dump(current_db_metadata, f, indent=4)
 
     return 0  # Sikeres létrehozás
+
+def get_tables_from_database(db_name, filepath=DB_FILE):
+    """Reads a JSON file and returns a list of tables for a given database."""
+    try:
+        with open(filepath, 'r') as file:
+            database_data = json.load(file)  # Load the JSON file into a Python dictionary
+
+            if db_name not in database_data:
+                print(f"Error: Database '{db_name}' not found.")
+                return []
+
+            return list(database_data[db_name].get("tables", {}).keys())
+
+    except FileNotFoundError:
+        print(f"Error: File '{filepath}' not found.")
+        return []
+    except json.JSONDecodeError:
+        print(f"Error: Invalid JSON format in '{filepath}'.")
+        return []
