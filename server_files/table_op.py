@@ -1,6 +1,6 @@
 import os
 import json
-from server_files.database_op import current_database, current_db_metadata  # Az adatbázis modulból importáljuk
+from server_files.database_op import DB_FILE, current_database, current_db_metadata  # Az adatbázis modulból importáljuk
 
 def create_table(table_name, columns):
     """
@@ -16,7 +16,7 @@ def create_table(table_name, columns):
     if current_database is None:
         return 1  # Nincs kiválasztott adatbázis
 
-    db_path = os.path.join(BASE_DIR, current_database)
+    db_path = os.path.join(DB_FILE, current_database)
     table_path = os.path.join(db_path, f"{table_name}.json")
 
     # Ellenőrizzük, hogy a tábla már létezik-e

@@ -26,7 +26,7 @@ def get_database_names_from_file(filepath):
 
 def use_database(db_name):
     """Beállítja az aktuális adatbázist és betölti az adatbázis JSON fájlját"""
-    global current_database
+    global current_database8
 
 
     db_path = os.path.join(DB_FILE, db_name)
@@ -64,9 +64,13 @@ def create_database(db_name):
     # Betöltjük a jelenlegi adatbázisokat
     #databases = load_databases()
 
-    databases = get_database_names_from_file(DB_FILE)
+    #database_names = get_database_names_from_file(DB_FILE)
 
     # Ellenőrizzük, hogy már létezik-e az adatbázis
+
+
+    databases = load_databases()
+
     if db_name in databases:
         return 1  # Ha létezik már, nem hozhatjuk létre újra
 

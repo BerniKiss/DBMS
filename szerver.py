@@ -4,6 +4,7 @@ import re
 from server_files.database_op import create_database  # A 'create_database' függvény importálása
 from server_files.table_op import create_table
 from server_files.database_op import use_database
+from server_files.database_op import get_database_names_from_file
 
 
 # Szerver beállításai
@@ -21,6 +22,8 @@ def parse_command(command):
         return "use_database", match.group(1)
     elif match := re.match(r'create table (\w+)', command):
         return "create_table", match.group(1)
+    elif match := re.match(r'list databases', command):
+        return "list_databases", None
     else:
         return None, None
 
@@ -43,6 +46,10 @@ def handle_client(client_socket):
             if command_type == "create_database":
                 status = create_database(argument)
                 response = f"Database '{argument}' created successfully!" if status == 0 else f"Database '{argument}' already exists."
+            elif command_type == "list_databases":
+                databases=get_database_names_from_file("databases.json")
+                #szervernke ossze kell allitnaia eloszor a valaszt
+                response= "Available databases:\n" + "\n".join(databases) if databases else "No databases found."
             elif command_type == "use_database":  # `use database` parancs kezelése
                 status =use_database(argument)
                 if status == 0:
