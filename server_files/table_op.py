@@ -1,6 +1,6 @@
 import os
 import json
-from server_files.database_op import BASE_DIR, current_database, current_db_metadata  # Az adatbázis modulból importáljuk
+from server_files.database_op import current_database, current_db_metadata  # Az adatbázis modulból importáljuk
 
 def create_table(table_name, columns):
     """
