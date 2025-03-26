@@ -1,29 +1,26 @@
 import socket
 import os
 import re
-from server_files.database_op import create_database  # A 'create_database' függvény importálása
+from server_files.database_op import create_database
 from server_files.table_op import create_table
 from server_files.database_op import use_database
 from server_files.database_op import get_database_names_from_file
 
-
-# Szerver beállításai
 HOST = '127.0.0.1'
 PORT = 12345
 
 def parse_command(command):
-    """ Felismeri az SQL parancsokat """
     command = command.strip()
 
     #visszakuldi az operator tipusat + a neve (pl tabla, database)
     if match := re.match(r'create database (\w+)', command):
         return "create_database", match.group(1)
-    elif match := re.match(r'use database (\w+)', command):  # Új parancs: use database
+    elif match := re.match(r'use database (\w+)', command):
         return "use_database", match.group(1)
     elif match := re.match(r'create table (\w+)\s+(.*)', command):
         table_name = match.group(1)
-        columns = match.group(2).split(",")  # Az oszlopokat vesszővel választjuk el
-        columns = [col.strip() for col in columns]  # Eltávolítjuk a fölösleges szóközöket
+        columns = match.group(2).split(",")
+        columns = [col.strip() for col in columns]
         print(table_name)
         print(columns)
         return "create_table", (table_name,columns)
@@ -33,7 +30,6 @@ def parse_command(command):
         return None, None
 
 def handle_client(client_socket):
-    """ Kezeli a kliens által küldött parancsokat """
     with client_socket:
         client_socket.sendall(b"Simple DB Server Ready. Send commands:\n")
 
@@ -56,7 +52,7 @@ def handle_client(client_socket):
                 databases=get_database_names_from_file("databases.json")
                 #szervernke ossze kell allitnaia eloszor a valaszt
                 response= "Available databases:\n" + "\n".join(databases) if databases else "No databases found."
-            elif command_type == "use_database":  # `use database` parancs kezelése
+            elif command_type == "use_database":
                 status =use_database(argument)
                 if status == 0:
                     response = f"Using database '{argument}'"

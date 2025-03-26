@@ -1,7 +1,7 @@
 import socket
 
-host = '127.0.0.1'  # A szerver IP címe
-port = 12345  # A szerver portja
+host = '127.0.0.1'
+port = 12345  #port
 
 # Kliens létrehozása
 client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)

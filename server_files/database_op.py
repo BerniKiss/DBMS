@@ -1,7 +1,7 @@
 import os
 import json
 
-current_database = None  # Globális változó az aktuális adatbázishoz
+current_database = None
 current_db_metadata = None
 
 #adatbazis tarolasa json faljba
@@ -13,19 +13,18 @@ def get_database_names_from_file(filepath):
     """Reads a JSON file and returns a list of database names."""
     try:
         with open(filepath, 'r') as file:
-            database_data = json.load(file) # loads the data from the json file to a python dictionary
+            database_data = json.load(file)
             database_names = list(database_data.keys())
             return database_names
     except FileNotFoundError:
         print(f"Error: File '{filepath}' not found.")
-        return [] # Return an empty list if the file doesn't exist
+        return []
     except json.JSONDecodeError:
         print(f"Error: Invalid JSON format in '{filepath}'.")
-        return [] # Return an empty list if the JSON is invalid
+        return []
 
 
 def use_database(db_name):
-    """Beállítja az aktuális adatbázist és betölti az adatbázis JSON fájlját"""
     global current_database
 
 
@@ -33,7 +32,7 @@ def use_database(db_name):
     #print(f" Dolgozo konyvtar{BASE_DIR}")
 
 
-    print(f"Checking if the database exists at: {db_path}")  # Debug log
+    print(f"Checking if the database exists at: {db_path}")
     databases = load_databases()
 
     if db_name not in databases:
@@ -42,9 +41,9 @@ def use_database(db_name):
     '''
     if not os.path.exists(db_path):
         print(f"Database '{db_name}' does not exist.")
-        return 1  # Az adatbázis vagy annak metaadata nem létezik
+        return 1
     '''
-    # Beállítjuk az aktuális adatbázist
+
     current_database = db_name
     print(f"Using database: {current_database}")
     return 0
@@ -63,25 +62,19 @@ def save_databases(databases):
         json.dump(databases, f, indent=4)
 
 def create_database(db_name):
-    #letrehoz egy uj foldert minden adatbazisnak
-    #db_path = os.path.join(BASE_DIR, db_name)
-    """Létrehoz egy új adatbázist a JSON fájlban"""
-    # Betöltjük a jelenlegi adatbázisokat
+
     #databases = load_databases()
 
     #database_names = get_database_names_from_file(DB_FILE)
 
-    # Ellenőrizzük, hogy már létezik-e az adatbázis
-
-
     databases = load_databases()
 
     if db_name in databases:
-        return 1  # Ha létezik már, nem hozhatjuk létre újra
+        return 1
 
-    # Hozzáadjuk az új adatbázist
+    # hozzaadjuk az uj adatbazist
     databases[db_name] = {"tables": {}}
 
-    # Mentjük a változásokat
+    # mentjuk a valtozasokat
     save_databases(databases)
-    return 0  # Sikeresen létrehoztuk az adatbázist
+    return 0

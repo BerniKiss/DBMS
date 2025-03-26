@@ -12,13 +12,29 @@
         "tables": {}
     },
     "virag": {
-        "tables": {}
+        "tables": {
+            "Employees": {
+                "columns": [
+                    "Name"
+                ],
+                "rows": []
+            }
+        }
     },
     "negyt": {
         "tables": {}
     },
     "berni": {
-        "tables": {}
+        "tables": {
+            "Data": {
+                "columns": [
+                    "Name",
+                    "Age",
+                    "Number"
+                ],
+                "rows": []
+            }
+        }
     },
     "valamii": {
         "tables": {}
