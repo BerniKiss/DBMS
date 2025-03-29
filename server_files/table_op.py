@@ -49,16 +49,16 @@ def create_table(table_name, columns):
         json.dump(databases, f, indent=4)
     return 0  #sikeres letrehozas
 
-def get_tables_from_database(db_name, filepath=DB_FILE):
+def get_tables_from_database(filepath=DB_FILE):
     try:
         with open(filepath, 'r') as file:
             database_data = json.load(file)
-
-            if db_name not in database_data:
-                print(f"Error: Database '{db_name}' not found.")
+            print(db_op.current_database)
+            if db_op.current_database not in database_data:
+                print(f"1Error: Database '{db_op.current_database}' not found.")
                 return []
 
-            return list(database_data[db_name].get("tables", {}).keys())
+            return list(database_data[db_op.current_database].get("tables", {}).keys())
 
     except FileNotFoundError:
         print(f"Error: File '{filepath}' not found.")
@@ -66,3 +66,32 @@ def get_tables_from_database(db_name, filepath=DB_FILE):
     except json.JSONDecodeError:
         print(f"Error: Invalid JSON format in '{filepath}'.")
         return []
+
+def drop_table(table_name):
+    if db_op.current_database is None:
+        return 1
+
+    try:
+        with open(DB_FILE, "r") as f:
+            databases = json.load(f)
+    except FileNotFoundError:
+        print(f"Error: File '{DB_FILE}' not found.")
+        return 1
+    except json.JSONDecodeError:
+        print(f"Error: Invalid JSON format in '{DB_FILE}'.")
+        return 1
+
+    db_name = db_op.current_database
+
+
+    if table_name not in databases[db_name]["tables"]:
+        return 2
+
+
+    del databases[db_name]["tables"][table_name]
+
+
+    with open(DB_FILE, "w") as f:
+        json.dump(databases, f, indent=4)
+
+    return 0

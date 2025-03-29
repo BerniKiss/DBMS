@@ -7,6 +7,10 @@ port = 12345  #port
 client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 client_socket.connect((host, port))
 
+# Fogadja a szerver kezdeti üzenetét
+response = client_socket.recv(1024)
+print(f"Server response: {response.decode()}")
+
 #uzenet kuldese a szervernejk
 while True:
     command = input("Enter command: ")

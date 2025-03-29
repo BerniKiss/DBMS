@@ -1,5 +1,7 @@
 import os
 import json
+import re
+import server_files.database_op as db_op
 
 current_database = None
 current_db_metadata = None
@@ -7,6 +9,19 @@ current_db_metadata = None
 #adatbazis tarolasa json faljba
 DB_FILE = "databases.json"
 #BASE_DIR = "databases"
+
+VALID_TYPES = {"int", "float", "bit", "date", "datetime", "varchar"}
+
+def is_valid_column_type(column_type):
+
+    if column_type in VALID_TYPES:
+        return True
+
+    if column_type.startswith("varchar"):
+        match = re.match(r"varchar\((\d+)\)", column_type)
+        return bool(match)  # akkor True
+
+    return False
 
 
 def get_database_names_from_file(filepath):
@@ -78,3 +93,29 @@ def create_database(db_name):
     # mentjuk a valtozasokat
     save_databases(databases)
     return 0
+
+def drop_database(db_name):
+    databases = load_databases()
+
+    if db_name not in databases:
+        return 1
+
+    try:
+        with open(DB_FILE, "r") as f:
+            databases = json.load(f)
+    except FileNotFoundError:
+        print(f"Error: File '{DB_FILE}' not found.")
+        return 1
+    except json.JSONDecodeError:
+        print(f"Error: Invalid JSON format in '{DB_FILE}'.")
+        return 1
+
+    #db_name = db_op.current_database
+
+    del databases[db_name]
+    save_databases(databases)
+    if db_name == db_op.current_database:
+         db_op.current_database=None
+    return 0
+
+
