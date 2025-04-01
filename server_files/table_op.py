@@ -25,7 +25,7 @@ def create_table(table_name, columns):
     #db_path = os.path.join(DB_FILE, db_op.current_database)
 
     #print(table_path)
-    tables=get_tables_from_database(db_op.current_database,DB_FILE)
+    tables=get_tables_from_database(db_op.current_database)
     if table_name in tables:
         return 2
     #table_path = os.path.join(db_path, f"{table_name}")
@@ -55,7 +55,7 @@ def get_tables_from_database(filepath=DB_FILE):
             database_data = json.load(file)
             print(db_op.current_database)
             if db_op.current_database not in database_data:
-                print(f"1Error: Database '{db_op.current_database}' not found.")
+                print(f"Error: Database '{db_op.current_database}' not found.")
                 return []
 
             return list(database_data[db_op.current_database].get("tables", {}).keys())
